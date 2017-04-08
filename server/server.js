@@ -57,6 +57,25 @@ app.get('/uthyrningar/:id', (req, res) => {
 
 });
 
+// DELETE /uthyrningar/id
+app.delete('/uthyrningar/:id', (req, res) => {
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  Uthyrning.findByIdAndRemove(id).then((uthyrning) => {
+    if (!uthyrning) {
+      return res.status(404).send();
+    }
+
+    res.send(uthyrning);
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+
 app.listen(port, () => {
   console.log('Server started on port ' + port);
 });
