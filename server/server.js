@@ -13,7 +13,7 @@ var app = express();
 
 app.use(bodyParser.json());
 
-app.post('/uthyrning', (req, res) => {
+app.post('/uthyrningar', (req, res) => {
   var uthyrning = new Uthyrning({
     artiklar: [req.body.text]
   });
@@ -23,6 +23,14 @@ app.post('/uthyrning', (req, res) => {
   }, (e) => {
     res.status(400).send(e);
   });
+});
+
+app.get('/uthyrningar', (req, res) => {
+  Uthyrning.find().then((uthyrningar) => {
+    res.send({uthyrningar});
+  }, (e) => {
+    res.status(400).send(e);
+  })
 });
 
 app.listen(APP_PORT, () => {

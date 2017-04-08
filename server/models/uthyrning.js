@@ -17,16 +17,19 @@ var Uthyrning = mongoose.model('Uthyrning', {
     default: Date.now
   },
   slap: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   kund: {
     type: Number
   },
   handpenning: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   ok: {
-    type: Boolean
+    type: Boolean,
+    default: true
   }
 });
 
