@@ -1,7 +1,8 @@
 // Imports.
-var express      = require('express');
-var bodyParser   = require('body-parser');
-var { ObjectID } = require ('mongodb');
+const _           = require('lodash');
+const express      = require('express');
+const bodyParser   = require('body-parser');
+const { ObjectID } = require ('mongodb');
 
 // Egna imports.
 var { mongoose }  = require('./db/mongoose');
@@ -73,6 +74,35 @@ app.delete('/uthyrningar/:id', (req, res) => {
     res.send(uthyrning);
   }).catch((e) => {
     res.status(400).send();
+  });
+});
+
+app.patch('/uthyrningar/:id', (req, res) => {
+  var id = req.params.id;
+  var body = _.pick(req.body, [
+    'artiklar',
+    'hamtas',
+    'lamnas',
+    'anvandas',
+    'slap',
+    'kund',
+    'handpenning',
+    'ok'
+  ]);
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  Uthyrning.findByIdAndUpdate(id, {$set: body}, {new: true}).then((uthyrning) => {
+    if (!uthyrning) {
+      return res.status(404).send();
+    }
+
+    res.send({uthyrning});
+  }).catch((e) => {
+    res.status(400).send();
+    console.log(e);
   });
 });
 
