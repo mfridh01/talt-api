@@ -9,7 +9,7 @@ var { Uthyrning } = require('./models/uthyrning');
 var { Artikel }   = require('./models/artikel');
 
 // Server ---
-var APP_PORT = 3000;
+const port = process.env.PORT || 3000;
 var app = express();
 
 app.use(bodyParser.json());
@@ -57,6 +57,6 @@ app.get('/uthyrningar/:id', (req, res) => {
 
 });
 
-app.listen(APP_PORT, () => {
-  console.log('Server started on port ' + APP_PORT);
+app.listen(port, () => {
+  console.log('Server started on port ' + port);
 });
