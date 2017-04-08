@@ -1,6 +1,7 @@
 // Imports.
-var express    = require('express');
-var bodyParser = require('body-parser');
+var express      = require('express');
+var bodyParser   = require('body-parser');
+var { ObjectID } = require ('mongodb');
 
 // Egna imports.
 var { mongoose }  = require('./db/mongoose');
@@ -13,6 +14,7 @@ var app = express();
 
 app.use(bodyParser.json());
 
+// POST /uthyrningar
 app.post('/uthyrningar', (req, res) => {
   var uthyrning = new Uthyrning({
     artiklar: [req.body.text]
@@ -25,12 +27,34 @@ app.post('/uthyrningar', (req, res) => {
   });
 });
 
+// GET /uthyrningar
 app.get('/uthyrningar', (req, res) => {
   Uthyrning.find().then((uthyrningar) => {
     res.send({uthyrningar});
   }, (e) => {
     res.status(400).send(e);
-  })
+  });
+});
+
+// GET /uthyrningar/##### <- ID nummer
+app.get('/uthyrningar/:id', (req, res) => {
+  var id = req.params.id;
+
+  // Valid id using isValid.
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  Uthyrning.findById(id).then((uthyrning) => {
+    if (!uthyrning) {
+      return res.status(404).send();
+    }
+
+    res.send({uthyrning});
+  }).catch((e) => {
+    res.status(400).send();
+  });
+
 });
 
 app.listen(APP_PORT, () => {
